@@ -4,6 +4,7 @@ extern const int zero = 0;
 
 int main() {
 	FILE* pPfList= NULL;
+	FILE* pP = NULL;
 
 	pPfList = fopen("Profile_List", "rb+");
 	if (pPfList == NULL)
@@ -15,9 +16,9 @@ int main() {
 		}
 		fseek(pPfList,0,SEEK_SET);
 		fwrite(&zero, sizeof(int), 1, pPfList);
-		createProfile(pPfList); 
 	}
-
+	pP = createProfile(pPfList);
+	showMM(pP,pPfList);
 
 
 	return 0;

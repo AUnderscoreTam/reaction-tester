@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <string.h>
+#include <time.h>
 
 
 typedef struct {
@@ -13,5 +14,7 @@ typedef struct {
 	int runs;
 }PROFILE;
 
-int isPListempty(FILE* pointer);
+
+
 FILE* createProfile(FILE* pointer);
+void showMM(FILE* pP, FILE* pFL);
