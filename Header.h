@@ -18,3 +18,5 @@ typedef struct {
 
 FILE* createProfile(FILE* pointer);
 void showMM(FILE* pP, FILE* pFL);
+FILE* switchProfile(FILE* pP, FILE* pFL);
+void listAllProfiles(FILE* pFL);

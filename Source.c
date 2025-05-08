@@ -18,8 +18,10 @@ int main() {
 		fwrite(&zero, sizeof(int), 1, pPfList);
 	}
 	pP = createProfile(pPfList);
-	showMM(pP,pPfList);
-
-
+	
+	while (1) {
+		showMM(pP, pPfList);
+	}
+	
 	return 0;
 }

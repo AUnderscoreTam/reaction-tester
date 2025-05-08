@@ -15,13 +15,14 @@ FILE* createProfile(FILE* pointer) {
 	
 	fseek(pointer, 0, SEEK_SET);
 	fread(&id, sizeof(int), 1, pointer);
-	fseek(pointer, (1+sizeof(temp1.name)*id), SEEK_SET);
+	fseek(pointer, ((int)sizeof(int) + (int)sizeof(temp1.name) * id), SEEK_SET);
 	fwrite(&temp1.name, sizeof(temp1.name), 1, pointer);
 	id++;
 	temp1.id = id;
 	fseek(pointer, 0, SEEK_SET);
 	fwrite(&id, sizeof(int), 1, pointer);
 	fseek(pointer, 0, SEEK_SET);
+
 	char name[30];
 	strcpy(name, temp1.name);
 	profilePointer=fopen(strcat(name, txt), "a+");
@@ -39,14 +40,17 @@ void showMM(FILE* pP , FILE* pFL) {
 	char profileName[30];
 	int choice = 0;
 	rewind(pP);
-	fscanf(pP, "%s", profileName);
+	fscanf(pP, "%29[^\n]", profileName);
 
 	printf("Profile selected: %s\n\n",profileName);
 	
 	printf("############################################\n");
 	printf("\tSelect a option to continue\n");
-	printf("1) create new account");
+	printf("\n1) create new profile");
+	printf("\n2) switch profile");
 
+
+	printf("\n\n Option selected :  ");
 	do
 	{
 		scanf("%d", &choice);
@@ -60,8 +64,36 @@ void showMM(FILE* pP , FILE* pFL) {
 		createProfile(pFL); 
 		break;
 	
+	case 2:
+		listAllProfiles(pFL);
+		//return switchProfile(pP,pFL);
+		break;
+
 	default:
 		break;
 	}
 
+}
+
+FILE* switchProfile(FILE* pP, FILE* pFL) {
+	fclose(pP);
+		
+
+
+
+
+}
+
+void listAllProfiles(FILE* pFL) {
+	system("cls");
+	int n = 0;
+	char name[30];
+	fseek(pFL, 0, SEEK_SET);
+	fread(&n, sizeof(int), 1, pFL);
+	
+	for (int i = 0; i < n; i++)
+	{
+ 	fread(name, 30, 1, pFL);
+	printf("%s\n", name);
+	}
 }
