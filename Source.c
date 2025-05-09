@@ -16,9 +16,13 @@ int main() {
 		}
 		fseek(pPfList,0,SEEK_SET);
 		fwrite(&zero, sizeof(int), 1, pPfList);
+		pP = createProfile(pPfList,pP);
 	}
-	pP = createProfile(pPfList);
-	
+	if (pP == NULL)
+	{
+		pP=switchProfile(pP, pPfList);
+	}
+
 	while (1) {
 		showMM(pP, pPfList);
 	}

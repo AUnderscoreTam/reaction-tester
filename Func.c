@@ -1,17 +1,24 @@
 #include "Header.h"
 
-FILE* createProfile(FILE* pointer) {
+extern char txt[5] = { ".txt" };
+
+FILE* createProfile(FILE* pointer,FILE* pP) {
 	PROFILE temp1 = { 0 };
 	char txt[5] = { ".txt" };
 	FILE* profilePointer = NULL;
 	int id = 0;
 	time_t now = time(NULL);
 
+	if (pP != NULL)
+	{
+		fclose(pP);
+	}
+
 
 	system("cls");
 	printf("enter your alias\n");
 	scanf("%29[^\n]",temp1.name);
-	getchar();
+	while ((getchar()) != '\n');
 	
 	fseek(pointer, 0, SEEK_SET);
 	fread(&id, sizeof(int), 1, pointer);
@@ -23,7 +30,7 @@ FILE* createProfile(FILE* pointer) {
 	fwrite(&id, sizeof(int), 1, pointer);
 	fseek(pointer, 0, SEEK_SET);
 
-	char name[30];
+	char name[35];
 	strcpy(name, temp1.name);
 	profilePointer=fopen(strcat(name, txt), "a+");
 	if (profilePointer == NULL)
@@ -54,19 +61,18 @@ void showMM(FILE* pP , FILE* pFL) {
 	do
 	{
 		scanf("%d", &choice);
-	} while (choice <= 0 || choice >= 6);
+	} while (choice <= 0 || choice >2 );
 	getchar();
 
 	switch (choice)
 	{
 	
 	case 1:
-		createProfile(pFL); 
+		pP = createProfile(pFL,pP); 
 		break;
 	
 	case 2:
-		listAllProfiles(pFL);
-		//return switchProfile(pP,pFL);
+		pP = switchProfile(pP,pFL);
 		break;
 
 	default:
@@ -76,24 +82,60 @@ void showMM(FILE* pP , FILE* pFL) {
 }
 
 FILE* switchProfile(FILE* pP, FILE* pFL) {
-	fclose(pP);
-		
+	
+	FILE* profilePointer = NULL;
+	int n = scanId(pFL);
+	int choice = 0;
+	listAllProfiles(pFL);
 
+	if (pP != NULL)
+	{
+		fclose(pP);
+	}
 
+	do
+	{
+		scanf("%d", &choice);
+	} while (choice <= 0 || choice > n);
 
+	char name[35];
+	fseek(pFL, ((int)sizeof(int) + 30 * (choice-1)), SEEK_SET);
+	fread(name, 30, 1, pFL);
+	profilePointer = fopen(strcat(name, txt), "a+");
+	if (profilePointer == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+	
+	system("cls");
 
+	return profilePointer;
+	
 }
+
+char* listProfile(FILE* pFL,int n) {
+	char name[30];
+	fseek(pFL, (sizeof(int) + 30 * n), SEEK_SET);
+	fread(name, 30, 1, pFL);
+
+	return name;
+} // NAUCI KORISTITI RETURNATI STRINGOVE 
 
 void listAllProfiles(FILE* pFL) {
 	system("cls");
-	int n = 0;
 	char name[30];
-	fseek(pFL, 0, SEEK_SET);
-	fread(&n, sizeof(int), 1, pFL);
+	int n = scanId(pFL);
 	
 	for (int i = 0; i < n; i++)
 	{
  	fread(name, 30, 1, pFL);
-	printf("%s\n", name);
+	printf("%d)%s\t", i+1 ,name);
 	}
+}
+
+int scanId(FILE* pFL) {
+	int n = 0;
+	fseek(pFL, 0, SEEK_SET);
+	fread(&n, sizeof(int), 1, pFL);
+	return n;
 }
