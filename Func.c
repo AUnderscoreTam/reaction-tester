@@ -55,13 +55,13 @@ void showMM(FILE* pP , FILE* pFL) {
 	printf("\tSelect a option to continue\n");
 	printf("\n1) create new profile");
 	printf("\n2) switch profile");
-
+	printf("\n3) delete profile");
 
 	printf("\n\n Option selected :  ");
 	do
 	{
 		scanf("%d", &choice);
-	} while (choice <= 0 || choice >2 );
+	} while (choice <= 0 || choice >3 );
 	getchar();
 
 	switch (choice)
@@ -73,6 +73,10 @@ void showMM(FILE* pP , FILE* pFL) {
 	
 	case 2:
 		pP = switchProfile(pP,pFL);
+		break;
+	
+	case 3:
+		deleteProfile(pFL, pP);
 		break;
 
 	default:
@@ -114,11 +118,13 @@ FILE* switchProfile(FILE* pP, FILE* pFL) {
 }
 
 char* listProfile(FILE* pFL,int n) {
-	char name[30];
+	/*
+		char name[30];
 	fseek(pFL, (sizeof(int) + 30 * n), SEEK_SET);
 	fread(name, 30, 1, pFL);
 
 	return name;
+	*/
 } // NAUCI KORISTITI RETURNATI STRINGOVE 
 
 void listAllProfiles(FILE* pFL) {
@@ -138,4 +144,60 @@ int scanId(FILE* pFL) {
 	fseek(pFL, 0, SEEK_SET);
 	fread(&n, sizeof(int), 1, pFL);
 	return n;
+}
+
+void deleteProfile(FILE* pFL, FILE* pP) {
+	FILE* profilePointer = NULL;
+	int n = scanId(pFL);
+	int choice = 0;
+	listAllProfiles(pFL);
+	char name[35] = { "\0" };
+
+	do
+	{
+		scanf("%d", &choice);
+	} while (choice <= 0 || choice > n);
+
+
+	char namet[35];
+	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
+	fread(namet, 30, 1, pFL);
+	strcat(namet, txt);
+	if ((remove(namet)) != 0){
+	fclose(pP);
+	remove(namet);
+
+	for (int i = 0; i < (n - choice); i++)
+	{
+		fseek(pFL, ((int)sizeof(int) + 30 * (choice + i)), SEEK_SET);
+		fread(name, 30, 1, pFL);
+		fseek(pFL, ((int)sizeof(int) + 30 * (choice + i)), SEEK_SET);
+		fwrite("\0", 30, 1, pFL);
+		fseek(pFL, ((int)sizeof(int) + 30 * ((choice + i) - 1)), SEEK_SET);
+		fwrite(name, 30, 1, pFL);
+	}
+
+	fseek(pFL, 0, SEEK_SET);
+	n -= 1;
+	fwrite(&n, sizeof(int), 1, pFL);
+
+
+	pP = switchProfile(pP, pFL);
+	return;
+	};
+	
+
+	for (int i = 0; i < (n - choice); i++)
+	{
+		fseek(pFL, ((int)sizeof(int) + 30 * (choice + i)), SEEK_SET);
+		fread(name, 30, 1, pFL);
+		fseek(pFL, ((int)sizeof(int) + 30 * (choice + i)), SEEK_SET);
+		fwrite("\0", 30, 1, pFL);
+		fseek(pFL, ((int)sizeof(int) + 30 * ((choice + i) - 1)), SEEK_SET);
+		fwrite(name, 30, 1, pFL);
+	}
+	
+	fseek(pFL,0,SEEK_SET);
+	n -= 1;
+	fwrite(&n,sizeof(int), 1, pFL);
 }
