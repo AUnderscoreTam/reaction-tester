@@ -16,9 +16,11 @@ FILE* createProfile(FILE* pointer,FILE* pP) {
 
 
 	printf("enter your alias\n");
-	scanf("%29[^\n]",temp1.name);
+	scanf("%29[^\n]", temp1.name);
+
 	while ((getchar()) != '\n');
 	
+	if (temp1.name[0] == '\0') {return createProfile(pointer, pP);}
 
 	char name[35];
 	strcpy(name, temp1.name);
@@ -53,48 +55,6 @@ FILE* createProfile(FILE* pointer,FILE* pP) {
 	}
 }
 
-void showMM(FILE* pP , FILE* pFL) {
-	char profileName[30];
-	int choice = 0;
-	fseek(pP,0,SEEK_SET);
-	fscanf(pP, "%29[^\n]", profileName);
-
-	printf("Profile selected: %s\n\n",profileName);
-	
-	printf("############################################\n");
-	printf("\tSelect a option to continue\n");
-	printf("\n1) create new profile");
-	printf("\n2) switch profile");
-	printf("\n3) delete profile");
-
-	printf("\n\n Option selected :  ");
-	do
-	{
-		scanf("%d", &choice);
-	} while (choice <= 0 || choice >3 );
-	getchar();
-
-	switch (choice)
-	{
-	
-	case 1:
-		pP = createProfile(pFL,pP); 
-		break;
-	
-	case 2:
-		pP = switchProfile(pP,pFL);
-		break;
-	
-	case 3:
-		deleteProfile(pFL, pP);
-		break;
-
-	default:
-		break;
-	}
-
-}
-
 FILE* switchProfile(FILE* pP, FILE* pFL) {
 	
 	FILE* profilePointer = NULL;
@@ -110,6 +70,7 @@ FILE* switchProfile(FILE* pP, FILE* pFL) {
 	do
 	{
 		scanf("%d", &choice);
+		getchar();
 	} while (choice <= 0 || choice > n);
 
 	char name[35];
@@ -164,8 +125,8 @@ void deleteProfile(FILE* pFL, FILE* pP) {
 	do
 	{
 		scanf("%d", &choice);
+		getchar();
 	} while (choice <= 0 || choice > n);
-	getchar();
 
 	char namet[35];
 	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
