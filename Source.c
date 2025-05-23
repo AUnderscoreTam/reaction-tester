@@ -36,13 +36,14 @@ int main() {
 		printf("\n1) create new profile");
 		printf("\n2) switch profile");
 		printf("\n3) delete profile");
+		printf("\n4) rename profile");
 
 		printf("\n\n Option selected :  ");
 		do
 		{
 			scanf("%d", &choice);
 			getchar();
-		} while (choice <= 0 || choice > 3);
+		} while (choice <= 0 || choice > 4);
 
 
 
@@ -62,6 +63,9 @@ int main() {
 			deleteProfile(pPfList, pP);
 			break;
 
+		case 4:
+			pP = renameProfile(pPfList, pP);
+			break;
 		default:
 			break;
 		}

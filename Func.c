@@ -185,3 +185,69 @@ void deleteProfile(FILE* pFL, FILE* pP) {
 	n -= 1;
 	fwrite(&n,sizeof(int), 1, pFL);
 }
+
+FILE* renameProfile(FILE* pFL, FILE* pP) {
+	int n = scanId(pFL);
+	int choice = 0;
+	listAllProfiles(pFL);
+	char name[30] = { 0 };
+	char emtpy[30] = { 0 };
+	char namet[35] = { 0 };
+	char namet2[35] = { 0 };
+	char namet3[35] = { 0 };
+	int warning = 0;
+	
+
+
+	rewind(pP);
+	fscanf(pP, "%s", namet3);
+	fclose(pP);
+
+	do
+	{
+		scanf("%d", &choice);
+		getchar();
+	} while (choice <= 0 || choice > n);
+
+	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
+	fread(namet, 30, 1, pFL);
+	strcat(namet, txt);
+
+	strcat(namet2, name);
+
+	do
+	{
+		if (warning>=1)
+		{
+			printf("alias already taken\n");
+		}
+		printf("enter new alias\n");
+		scanf("%29[^\n]", name);
+		while ((getchar()) != '\n');
+		strcpy(namet2, name);
+		warning++;
+	} while ((fopen(strcat(namet2, txt), "r")) != NULL);
+	
+	
+	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
+	fwrite(emtpy, 30, 1, pFL);
+	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
+	fwrite(name, 30, 1, pFL);
+	pP = fopen(namet, "r+");
+	for (int i = 0; i < 30; i++)
+	{
+	fprintf(pP, "%s", " ");
+	}
+	fseek(pP, 0, SEEK_SET);
+	fprintf(pP, "%s", name);
+	fclose(pP);
+	rename(namet, namet2);
+
+	if ((pP=fopen(strcat(namet3,txt),"r"))==NULL)
+	{
+		pP = fopen(namet2, "a+");
+	}
+
+	return pP;
+		 
+}
