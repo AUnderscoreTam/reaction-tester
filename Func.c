@@ -34,6 +34,7 @@ FILE* createProfile(FILE* pointer,FILE* pP) {
 		}
 
 		fputs(temp1.name, profilePointer);
+		fputs("\n", profilePointer);
 		fflush(profilePointer);
 
 		fseek(pointer, 0, SEEK_SET);
@@ -250,4 +251,48 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 
 	return pP;
 		 
+}
+
+void writeToFile(FILE* pP, char* string) {
+	struct tm* tim;
+	time_t t;
+	t = time(NULL);
+	tim = localtime(&t);
+	fseek(pP, 0, SEEK_END);
+	fprintf(pP, "%s   %s", string,asctime(tim));
+}
+
+void reactionTest(FILE* pP) {
+	int offset = 0;
+	struct timeb time1 = { NULL };
+	struct timeb time2 = { NULL };
+	char buf = '!';
+	int rez=0;
+	char buffer[245] = { '0' };
+	offset = 1000 + (float)rand() / RAND_MAX * (7000 - 1000);
+
+	system("cls");
+	printf("press any key when the hashtags turn green\n");
+	printf("\033[0;31m############\n############\n############\n############\n\033[0m");
+	Sleep((1000 + offset));
+	system("cls");
+	printf("wait for the hashtags to turn green\n");
+	printf("\033[0;32m############\n############\n############\n############\n\033[0m");
+	Sleep(50);
+	ftime(&time1);
+	while (buf=='!')
+	{
+		buf = _getch();
+	}
+	ftime(&time2);
+	rez = ((time2.time - time1.time)*1000 + time2.millitm) - time1.millitm;
+	if (rez == 0)
+	{
+		printf("pressed too early\n");
+	}
+	else {
+		printf("%d\n", rez);
+		sprintf(buffer, "%d", rez);
+		writeToFile(pP, buffer);
+	}
 }

@@ -6,6 +6,8 @@ int main() {
 	FILE* pPfList= NULL;
 	FILE* pP = NULL;
 
+	srand((unsigned)time(NULL));
+
 	pPfList = fopen("Profile_List", "rb+");
 	if (pPfList == NULL)
 	{
@@ -37,13 +39,15 @@ int main() {
 		printf("\n2) switch profile");
 		printf("\n3) delete profile");
 		printf("\n4) rename profile");
+		printf("\n5) play");
+		
 
 		printf("\n\n Option selected :  ");
 		do
 		{
 			scanf("%d", &choice);
 			getchar();
-		} while (choice <= 0 || choice > 4);
+		} while (choice <= 0 || choice > 5);
 
 
 
@@ -66,6 +70,10 @@ int main() {
 		case 4:
 			pP = renameProfile(pPfList, pP);
 			break;
+		
+		case 5:
+			reactionTest(pP);
+
 		default:
 			break;
 		}

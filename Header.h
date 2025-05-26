@@ -6,6 +6,8 @@
 #include <windows.h>
 #include <string.h>
 #include <time.h>
+#include <sys/timeb.h>
+#include <conio.h>
 
 
 typedef struct {
@@ -23,3 +25,5 @@ char* listProfile(FILE* pFL, int n);
 int scanId(FILE* pFL);
 void deleteProfile(FILE* pFL, FILE* pP);
 FILE* renameProfile(FILE* pFL, FILE* pP);
+void writeToFile(FILE* pP, char* string);
+void reactionTest(FILE* pP);
