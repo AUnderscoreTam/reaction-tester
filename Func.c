@@ -86,16 +86,6 @@ FILE* switchProfile(FILE* pP, FILE* pFL) {
 	
 }
 
-char* listProfile(FILE* pFL,int n) {
-	/*
-		char name[30];
-	fseek(pFL, (sizeof(int) + 30 * n), SEEK_SET);
-	fread(name, 30, 1, pFL);
-
-	return name;
-	*/
-} // NAUCI KORISTITI RETURNATI STRINGOVE 
-
 void listAllProfiles(FILE* pFL) {
 	char name[30];
 	int n = scanId(pFL);
@@ -256,10 +246,12 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 void writeToFile(FILE* pP, char* string) {
 	struct tm* tim;
 	time_t t;
+	char temp[30];
 	t = time(NULL);
 	tim = localtime(&t);
+	strftime(temp, sizeof(temp), "%d/%B/%y - %I:%M%p",tim);
 	fseek(pP, 0, SEEK_END);
-	fprintf(pP, "%s   %s", string,asctime(tim));
+	fprintf(pP, "%s   %s\n", string,temp);
 }
 
 void reactionTest(FILE* pP) {
@@ -278,7 +270,7 @@ void reactionTest(FILE* pP) {
 	system("cls");
 	printf("wait for the hashtags to turn green\n");
 	printf("\033[0;32m############\n############\n############\n############\n\033[0m");
-	Sleep(50);
+	Sleep(60);
 	ftime(&time1);
 	while (buf=='!')
 	{
@@ -289,6 +281,10 @@ void reactionTest(FILE* pP) {
 	if (rez == 0)
 	{
 		printf("pressed too early\n");
+	}
+	else if(rez >=9999)
+	{
+		printf("pressed too late\n");
 	}
 	else {
 		printf("%d\n", rez);

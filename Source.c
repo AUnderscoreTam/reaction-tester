@@ -27,19 +27,26 @@ int main() {
 
 	while (1) {
 		char profileName[30];
+		char lastRecordedSpeed[30] = {-51};
 		int choice = 0;
 		fseek(pP, 0, SEEK_SET);
 		fscanf(pP, "%29[^\n]", profileName);
+		fseek(pP, -29, SEEK_END);
+ 		if (fscanf(pP, "%29[^\n]", lastRecordedSpeed)==0)
+		{
+			fseek(pP, -28, SEEK_END);
+			fscanf(pP, "%29[^\n]", lastRecordedSpeed);
+		}
 
-		printf("Profile selected: %s\n\n", profileName);
+		printf("Profile selected: %s\nLast recoded speed: %s\n", profileName,lastRecordedSpeed);
 
 		printf("############################################\n");
 		printf("\tSelect a option to continue\n");
-		printf("\n1) create new profile");
-		printf("\n2) switch profile");
-		printf("\n3) delete profile");
-		printf("\n4) rename profile");
-		printf("\n5) play");
+		printf("\n1) play");
+		printf("\n2) create new profile");
+		printf("\n3) switch profile");
+		printf("\n4) delete profile");
+		printf("\n5) rename profile");
 		
 
 		printf("\n\n Option selected :  ");
@@ -56,23 +63,24 @@ int main() {
 		{
 
 		case 1:
-			pP = createProfile(pPfList, pP);
+			reactionTest(pP);
 			break;
 
 		case 2:
-			pP = switchProfile(pP, pPfList);
+			pP = createProfile(pPfList, pP);
 			break;
 
 		case 3:
-			deleteProfile(pPfList, pP);
+			pP = switchProfile(pP, pPfList);
 			break;
 
 		case 4:
-			pP = renameProfile(pPfList, pP);
+			deleteProfile(pPfList, pP);
 			break;
 		
 		case 5:
-			reactionTest(pP);
+			pP = renameProfile(pPfList, pP);
+			break;
 
 		default:
 			break;

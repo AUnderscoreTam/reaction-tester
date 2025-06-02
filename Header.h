@@ -21,7 +21,6 @@ typedef struct {
 FILE* createProfile(FILE* pointer,FILE* pP);
 FILE* switchProfile(FILE* pP, FILE* pFL);
 void listAllProfiles(FILE* pFL);
-char* listProfile(FILE* pFL, int n);
 int scanId(FILE* pFL);
 void deleteProfile(FILE* pFL, FILE* pP);
 FILE* renameProfile(FILE* pFL, FILE* pP);
