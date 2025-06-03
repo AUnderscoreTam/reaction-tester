@@ -1,4 +1,4 @@
-#include "Header.h"
+#include "Profile.h"
 
 extern const int zero = 0;
 
@@ -36,11 +36,11 @@ int main() {
 		fscanf(pP, "%29[^\n]", profileName);
 		fseek(pP, 0, SEEK_SET);
 		while ((c=fgetc(pP)) != EOF) {
-			if (i>=32)
+			if (i>30)
 			{
-				fseek(pP, -29, SEEK_END);
+				fseek(pP, -32, SEEK_END);
 				if (fscanf(pP, "%29[^\n]", lastRecordedSpeed) == 0) {
-					fseek(pP, -28, SEEK_END);
+					fseek(pP, -31, SEEK_END);
 					fscanf(pP, "%29[^\n]", lastRecordedSpeed);
 				};
 				break;
@@ -53,10 +53,11 @@ int main() {
 		printf("############################################\n");
 		printf("\tSelect a option to continue\n");
 		printf("\n1) play");
-		printf("\n2) create new profile");
-		printf("\n3) switch profile");
-		printf("\n4) delete profile");
+		printf("\n2) display all times in profile");
+		printf("\n3) create new profile");
+		printf("\n4) switch profile");
 		printf("\n5) rename profile");
+		printf("\n6) delete profile");
 		
 
 		printf("\n\n Option selected :  ");
@@ -75,22 +76,27 @@ int main() {
 			break;
 
 		case 2:
-			pP = createProfile(pPfList, pP);
+			showProfileSpeed(pP);
 			break;
 
 		case 3:
-			pP = switchProfile(pP, pPfList);
+			pP = createProfile(pPfList, pP);
 			break;
 
 		case 4:
-			deleteProfile(pPfList, pP);
+			pP = switchProfile(pP, pPfList);
 			break;
 		
 		case 5:
 			pP = renameProfile(pPfList, pP);
 			break;
 
+		case 6:
+			deleteProfile(pPfList, pP);
+			break;
+
 		default:
+
 			break;
 		}
 

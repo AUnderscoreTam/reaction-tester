@@ -1,4 +1,4 @@
-#include "Header.h"
+#include "Profile.h"
 
 extern char txt[5] = { ".txt" };
 
@@ -263,7 +263,7 @@ void writeToFile(FILE* pP, char* string) {
 	tim = localtime(&t);
 	strftime(temp, sizeof(temp), "%d/%B/%y - %I:%M%p",tim);
 	fseek(pP, 0, SEEK_END);
-	fprintf(pP, "%s   %s\n", string,temp);
+	fprintf(pP, "%s   %s   \n", string,temp);
 }
 
 void reactionTest(FILE* pP) {
@@ -303,4 +303,16 @@ void reactionTest(FILE* pP) {
 		sprintf(buffer, "%d", rez);
 		writeToFile(pP, buffer);
 	}
+}
+
+void showProfileSpeed(FILE* pP) {
+	char c = 0;
+	rewind(pP);
+	printf("\n");
+	while (fgetc(pP) != '\n') {
+	}
+	while ((c=fgetc(pP)) != EOF) {
+		printf("%c",c);
+	}
+	printf("\n");
 }
