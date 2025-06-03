@@ -187,11 +187,13 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 	char namet2[35] = { 0 };
 	char namet3[35] = { 0 };
 	int warning = 0;
+	char c;
+	int i=0;
 	
 
 
 	rewind(pP);
-	fscanf(pP, "%s", namet3);
+	fscanf(pP, "%29[^\n]", namet3);
 	fclose(pP);
 
 	do
@@ -224,10 +226,21 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 	fwrite(emtpy, 30, 1, pFL);
 	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
 	fwrite(name, 30, 1, pFL);
+	fflush(pFL);
 	pP = fopen(namet, "r+");
-	for (int i = 0; i < 30; i++)
+	rewind(pP);
+	while((c=fgetc(pP))!='\n')
 	{
-	fprintf(pP, "%s", " ");
+		if (c==EOF)
+		{
+			break;
+		}
+		i++;
+	}
+	for (int y = 0; y < i; y++)
+	{
+		fseek(pP, y, SEEK_SET);
+		fprintf(pP, "%s", " ");
 	}
 	fseek(pP, 0, SEEK_SET);
 	fprintf(pP, "%s", name);
@@ -238,7 +251,6 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 	{
 		pP = fopen(namet2, "a+");
 	}
-
 	return pP;
 		 
 }

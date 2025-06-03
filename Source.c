@@ -27,18 +27,28 @@ int main() {
 
 	while (1) {
 		char profileName[30];
-		char lastRecordedSpeed[30] = {-51};
+		char c=8;
+		char lastRecordedSpeed[30] = {0};
 		int choice = 0;
+		int i = 0;
+		int bN = 0;
 		fseek(pP, 0, SEEK_SET);
 		fscanf(pP, "%29[^\n]", profileName);
-		fseek(pP, -29, SEEK_END);
- 		if (fscanf(pP, "%29[^\n]", lastRecordedSpeed)==0)
-		{
-			fseek(pP, -28, SEEK_END);
-			fscanf(pP, "%29[^\n]", lastRecordedSpeed);
+		fseek(pP, 0, SEEK_SET);
+		while ((c=fgetc(pP)) != EOF) {
+			if (i>=32)
+			{
+				fseek(pP, -29, SEEK_END);
+				if (fscanf(pP, "%29[^\n]", lastRecordedSpeed) == 0) {
+					fseek(pP, -28, SEEK_END);
+					fscanf(pP, "%29[^\n]", lastRecordedSpeed);
+				};
+				break;
+			}
+			i++;
 		}
 
-		printf("Profile selected: %s\nLast recoded speed: %s\n", profileName,lastRecordedSpeed);
+		printf("Profile selected: %s\nLast recorded speed: %s\n", profileName,lastRecordedSpeed);
 
 		printf("############################################\n");
 		printf("\tSelect a option to continue\n");
@@ -55,8 +65,6 @@ int main() {
 			scanf("%d", &choice);
 			getchar();
 		} while (choice <= 0 || choice > 5);
-
-
 
 
 		switch (choice)
