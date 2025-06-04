@@ -18,12 +18,16 @@ typedef struct {
 
 
 
-FILE* createProfile(FILE* pointer,FILE* pP);
-FILE* switchProfile(FILE* pP, FILE* pFL);
-void showProfileSpeed(FILE* pP);
-void listAllProfiles(FILE* pFL);
-int scanId(FILE* pFL);
-void deleteProfile(FILE* pFL, FILE* pP);
-FILE* renameProfile(FILE* pFL, FILE* pP);
-void writeToFile(FILE* pP, char* string);
-void reactionTest(FILE* pP);
+FILE* createProfile(FILE* const pFL, FILE* pP);
+FILE* switchProfile(const FILE* pP, const FILE* const pFL);
+void listAllProfiles(const FILE* const pFL);
+int scanId(const FILE* const pFL);
+void deleteProfile(FILE* const pFL, FILE* pP);
+FILE* renameProfile(FILE* const pFL, FILE* pP);
+void writeToFile(FILE* const pP, char* string);
+void reactionTest(FILE* const pP);
+void showProfileSpeed(const FILE* const pP);
+void leaderboard(const FILE* const pP, const FILE* const pFL);
+int compare(const void* a, const void* b);
+int numberOfTrys(const FILE* const pP);
+int readspeed(FILE* const pP, int i);

@@ -2,7 +2,7 @@
 
 extern char txt[5] = { ".txt" };
 
-FILE* createProfile(FILE* pointer,FILE* pP) {
+FILE* createProfile(FILE* const pFL,FILE* pP) {
 	PROFILE temp1 = { 0 };
 	char txt[5] = { ".txt" };
 	FILE* profilePointer = NULL;
@@ -20,7 +20,7 @@ FILE* createProfile(FILE* pointer,FILE* pP) {
 
 	while ((getchar()) != '\n');
 	
-	if (temp1.name[0] == '\0') {return createProfile(pointer, pP);}
+	if (temp1.name[0] == '\0') {return createProfile(pFL, pP);}
 
 	char name[35];
 	strcpy(name, temp1.name);
@@ -37,26 +37,26 @@ FILE* createProfile(FILE* pointer,FILE* pP) {
 		fputs("\n", profilePointer);
 		fflush(profilePointer);
 
-		fseek(pointer, 0, SEEK_SET);
-		fread(&id, sizeof(int), 1, pointer);
-		fseek(pointer, ((int)sizeof(int) + (int)sizeof(temp1.name) * id), SEEK_SET);
-		fwrite(&temp1.name, sizeof(temp1.name), 1, pointer);
+		fseek(pFL, 0, SEEK_SET);
+		fread(&id, sizeof(int), 1, pFL);
+		fseek(pFL, ((int)sizeof(int) + (int)sizeof(temp1.name) * id), SEEK_SET);
+		fwrite(&temp1.name, sizeof(temp1.name), 1, pFL);
 		id++;
 		temp1.id = id;
-		fseek(pointer, 0, SEEK_SET);
-		fwrite(&id, sizeof(int), 1, pointer);
-		fseek(pointer, 0, SEEK_SET);
+		fseek(pFL, 0, SEEK_SET);
+		fwrite(&id, sizeof(int), 1, pFL);
+		fseek(pFL, 0, SEEK_SET);
 		return profilePointer;
 	}
 	else
 	{
 		printf("alias already taken");
 		Sleep(3500);
-		createProfile(pointer, pP);
+		createProfile(pFL, pP);
 	}
 }
 
-FILE* switchProfile(FILE* pP, FILE* pFL) {
+FILE* switchProfile(const FILE* pP, const FILE* const pFL) {
 	
 	FILE* profilePointer = NULL;
 	int n = scanId(pFL);
@@ -86,7 +86,7 @@ FILE* switchProfile(FILE* pP, FILE* pFL) {
 	
 }
 
-void listAllProfiles(FILE* pFL) {
+void listAllProfiles(const FILE* const pFL) {
 	char name[30];
 	int n = scanId(pFL);
 	
@@ -97,14 +97,14 @@ void listAllProfiles(FILE* pFL) {
 	}
 }
 
-int scanId(FILE* pFL) {
+int scanId(const FILE* const pFL) {
 	int n = 0;
 	fseek(pFL, 0, SEEK_SET);
 	fread(&n, sizeof(int), 1, pFL);
 	return n;
 }
 
-void deleteProfile(FILE* pFL, FILE* pP) {
+void deleteProfile(FILE* const pFL, FILE* pP) {
 	FILE* profilePointer = NULL;
 	int n = scanId(pFL);
 	int choice = 0;
@@ -177,7 +177,7 @@ void deleteProfile(FILE* pFL, FILE* pP) {
 	fwrite(&n,sizeof(int), 1, pFL);
 }
 
-FILE* renameProfile(FILE* pFL, FILE* pP) {
+FILE* renameProfile(FILE* const pFL, FILE* pP) {
 	int n = scanId(pFL);
 	int choice = 0;
 	listAllProfiles(pFL);
@@ -187,7 +187,7 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 	char namet2[35] = { 0 };
 	char namet3[35] = { 0 };
 	int warning = 0;
-	char c;
+	char c = 0;
 	int i=0;
 	
 
@@ -228,6 +228,10 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 	fwrite(name, 30, 1, pFL);
 	fflush(pFL);
 	pP = fopen(namet, "r+");
+	if (pP==NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
 	rewind(pP);
 	while((c=fgetc(pP))!='\n')
 	{
@@ -250,12 +254,16 @@ FILE* renameProfile(FILE* pFL, FILE* pP) {
 	if ((pP=fopen(strcat(namet3,txt),"r"))==NULL)
 	{
 		pP = fopen(namet2, "a+");
+		if (pP==NULL)
+		{
+			exit(EXIT_FAILURE);
+		}
 	}
 	return pP;
 		 
 }
 
-void writeToFile(FILE* pP, char* string) {
+void writeToFile(FILE* const pP, char* string) {
 	struct tm* tim;
 	time_t t;
 	char temp[30];
@@ -263,10 +271,10 @@ void writeToFile(FILE* pP, char* string) {
 	tim = localtime(&t);
 	strftime(temp, sizeof(temp), "%d/%B/%y - %I:%M%p",tim);
 	fseek(pP, 0, SEEK_END);
-	fprintf(pP, "%s   %s   \n", string,temp);
+	fprintf(pP, "%s\t%s     \n", string,temp);
 }
 
-void reactionTest(FILE* pP) {
+void reactionTest(FILE* const pP) {
 	int offset = 0;
 	struct timeb time1 = { NULL };
 	struct timeb time2 = { NULL };
@@ -305,7 +313,7 @@ void reactionTest(FILE* pP) {
 	}
 }
 
-void showProfileSpeed(FILE* pP) {
+void showProfileSpeed(const FILE* const pP) {
 	char c = 0;
 	rewind(pP);
 	printf("\n");
@@ -316,3 +324,66 @@ void showProfileSpeed(FILE* pP) {
 	}
 	printf("\n");
 }
+
+/*
+	void leaderboard(FILE* pP, FILE* pFL) {
+	int n = scanId(pFL);
+	int y = numberOfTrys(pP);
+	char** arr = malloc(sizeof(*arr) * n);
+	for (int i = 0; i < n; ++i) {
+		arr[i] = malloc(sizeof(arr[0]) * y);
+	}
+}
+*/
+
+void leaderboard(const FILE* const pP, const FILE* const pFL){
+	int y = numberOfTrys(pP);
+	int* array = (int*)calloc(y, sizeof(int));
+	if (array==NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+	for (int i = 0; i < y; i++)
+	{
+		array[i] = readspeed(pP, i);
+	}
+
+	qsort(array, y, sizeof(int), compare);
+	for (int i = 0; i < y; i++)
+	{
+		printf("%d\n", array[i]);
+	}
+	if (array != NULL) {
+		free(array);
+		array = NULL;
+	}
+}
+
+int compare(const void* a, const void* b) { return (*(int*)a - *(int*)b); }
+
+int numberOfTrys(const FILE* const pP) {
+	char c;
+	int rez=0;
+	rewind(pP);
+	while (fgetc(pP) != '\n') {
+	}
+	while ((c = fgetc(pP)) != EOF) {
+		if (c=='\n')
+		{
+			rez++;
+		};
+	}
+	return rez;
+}
+
+int readspeed(FILE* const pP, int i) {
+	char c = 0;
+	int rez = 0;
+	rewind(pP);
+	while (fgetc(pP) != '\n') {
+	}
+	fseek(pP, 30 * i, SEEK_CUR);
+	fscanf(pP, "%d", &rez);
+	return rez;
+}
+

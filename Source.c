@@ -2,9 +2,20 @@
 
 extern const int zero = 0;
 
+enum choice
+{
+	play=1,
+	display_all_times_in_profile,
+	display_profile_time_leaderboard,
+	create_new_profile,
+	switch_profile,
+	rename_profile,
+	delete_profile
+};
+
 int main() {
-	FILE* pPfList= NULL;
-	FILE* pP = NULL;
+	static FILE* pPfList= NULL;
+	static FILE* pP = NULL;
 
 	srand((unsigned)time(NULL));
 
@@ -54,10 +65,11 @@ int main() {
 		printf("\tSelect a option to continue\n");
 		printf("\n1) play");
 		printf("\n2) display all times in profile");
-		printf("\n3) create new profile");
-		printf("\n4) switch profile");
-		printf("\n5) rename profile");
-		printf("\n6) delete profile");
+		printf("\n3) display profile time leaderboard");
+		printf("\n4) create new profile");
+		printf("\n5) switch profile");
+		printf("\n6) rename profile");
+		printf("\n7) delete profile");
 		
 
 		printf("\n\n Option selected :  ");
@@ -65,33 +77,37 @@ int main() {
 		{
 			scanf("%d", &choice);
 			getchar();
-		} while (choice <= 0 || choice > 5);
+		} while (choice <= 0 || choice > 7);
 
 
 		switch (choice)
 		{
 
-		case 1:
+		case play:
 			reactionTest(pP);
 			break;
 
-		case 2:
+		case display_all_times_in_profile :
 			showProfileSpeed(pP);
 			break;
 
-		case 3:
+		case display_profile_time_leaderboard :
+			leaderboard(pP, pPfList);
+			break;
+
+		case create_new_profile:
 			pP = createProfile(pPfList, pP);
 			break;
 
-		case 4:
+		case switch_profile :
 			pP = switchProfile(pP, pPfList);
 			break;
 		
-		case 5:
+		case rename_profile :
 			pP = renameProfile(pPfList, pP);
 			break;
 
-		case 6:
+		case delete_profile:
 			deleteProfile(pPfList, pP);
 			break;
 
