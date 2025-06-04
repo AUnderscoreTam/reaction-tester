@@ -7,15 +7,18 @@ enum choice
 	play=1,
 	display_all_times_in_profile,
 	display_profile_time_leaderboard,
+	
 	create_new_profile,
 	switch_profile,
+	switch_profile_by_name,
 	rename_profile,
-	delete_profile
+	delete_profile,
+
 };
 
 int main() {
 	static FILE* pPfList= NULL;
-	static FILE* pP = NULL;
+	FILE* pP = NULL;
 
 	srand((unsigned)time(NULL));
 
@@ -68,8 +71,9 @@ int main() {
 		printf("\n3) display profile time leaderboard");
 		printf("\n4) create new profile");
 		printf("\n5) switch profile");
-		printf("\n6) rename profile");
-		printf("\n7) delete profile");
+		printf("\n6) switch profile by name");
+		printf("\n7) rename profile");
+		printf("\n8) delete profile");
 		
 
 		printf("\n\n Option selected :  ");
@@ -77,7 +81,7 @@ int main() {
 		{
 			scanf("%d", &choice);
 			getchar();
-		} while (choice <= 0 || choice > 7);
+		} while (choice <= 0 || choice > 8);
 
 
 		switch (choice)
@@ -97,6 +101,10 @@ int main() {
 
 		case create_new_profile:
 			pP = createProfile(pPfList, pP);
+			break;
+
+		case switch_profile_by_name:
+			pP = searchProfile(pP, pPfList);
 			break;
 
 		case switch_profile :

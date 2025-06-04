@@ -27,13 +27,20 @@ FILE* createProfile(FILE* const pFL,FILE* pP) {
 
 	if ((fopen(strcat(name, txt), "r")) == NULL)
 	{
-		profilePointer = fopen(name, "a+");
+		FILE* Temp=fopen(name, "w");
+		fclose(Temp);
+		profilePointer = fopen(name, "r+");
 		if (profilePointer == NULL)
 		{
 			exit(EXIT_FAILURE);
 		}
-
+		for (int i = 0; i < 30; i++)
+		{
+			fputs(" ", profilePointer);
+		}
+		rewind(profilePointer);
 		fputs(temp1.name, profilePointer);
+		fseek(profilePointer, 0, SEEK_END);
 		fputs("\n", profilePointer);
 		fflush(profilePointer);
 
@@ -192,8 +199,7 @@ FILE* renameProfile(FILE* const pFL, FILE* pP) {
 	
 
 
-	rewind(pP);
-	fscanf(pP, "%29[^\n]", namet3);
+
 	fclose(pP);
 
 	do
@@ -205,8 +211,6 @@ FILE* renameProfile(FILE* const pFL, FILE* pP) {
 	fseek(pFL, ((int)sizeof(int) + 30 * (choice - 1)), SEEK_SET);
 	fread(namet, 30, 1, pFL);
 	strcat(namet, txt);
-
-	strcat(namet2, name);
 
 	do
 	{
@@ -249,15 +253,14 @@ FILE* renameProfile(FILE* const pFL, FILE* pP) {
 	fseek(pP, 0, SEEK_SET);
 	fprintf(pP, "%s", name);
 	fclose(pP);
-	rename(namet, namet2);
 
-	if ((pP=fopen(strcat(namet3,txt),"r"))==NULL)
+	rename(namet, namet2);
+	printf("Value of errno: %d\n", errno);
+	perror("Error message:");
+
+	if ((pP=fopen(namet2,"r+"))==NULL)
 	{
-		pP = fopen(namet2, "a+");
-		if (pP==NULL)
-		{
-			exit(EXIT_FAILURE);
-		}
+		exit(EXIT_FAILURE);
 	}
 	return pP;
 		 
@@ -325,16 +328,6 @@ void showProfileSpeed(const FILE* const pP) {
 	printf("\n");
 }
 
-/*
-	void leaderboard(FILE* pP, FILE* pFL) {
-	int n = scanId(pFL);
-	int y = numberOfTrys(pP);
-	char** arr = malloc(sizeof(*arr) * n);
-	for (int i = 0; i < n; ++i) {
-		arr[i] = malloc(sizeof(arr[0]) * y);
-	}
-}
-*/
 
 void leaderboard(const FILE* const pP, const FILE* const pFL){
 	int y = numberOfTrys(pP);
@@ -387,3 +380,48 @@ int readspeed(FILE* const pP, int i) {
 	return rez;
 }
 
+FILE* searchProfile(const FILE* pP, const FILE* const pFL) {
+	int n = scanId(pFL);
+	FILE* profilePointer = NULL;
+	char* chosen = NULL;
+	char* array = (char*)calloc(n, sizeof(char)*30);
+	if (array==NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+	char key[30] = { 0 };
+
+	printf("enter your alias\n");
+	scanf("%29[^\n]",key);
+
+	while ((getchar()) != '\n');
+
+	for (int i = 0; i < scanId(pFL); i++)
+	{
+		fseek(pFL, ((int)sizeof(int) + 30 * i), SEEK_SET);
+		fread((array+30*i), 30, 1, pFL);
+	}
+
+	qsort(array, n, 30, strCompare);
+	
+	if ((chosen=(char*)bsearch(&key, array, scanId(pFL), 30, strCompare)) == NULL) {
+		printf("no profile matching name found\n");
+		return pP;
+	}
+	else
+	{
+		if (pP != NULL)
+		{
+			fclose(pP);
+		}
+
+		profilePointer = fopen(strcat(chosen, txt), "a+");
+		if (profilePointer == NULL)
+		{
+			exit(EXIT_FAILURE);
+		}
+		return profilePointer;
+	}
+}
+
+int strCompare(const void* a, const void* b) {return strcmp((const char*)a, (const char*)b);}

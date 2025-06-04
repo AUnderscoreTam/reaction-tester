@@ -13,7 +13,6 @@
 typedef struct {
 	int id;
 	char name[30];
-	int runs;
 }PROFILE;
 
 
@@ -31,3 +30,7 @@ void leaderboard(const FILE* const pP, const FILE* const pFL);
 int compare(const void* a, const void* b);
 int numberOfTrys(const FILE* const pP);
 int readspeed(FILE* const pP, int i);
+FILE* searchProfile(const FILE* pP, const FILE* const pFL);
+int strCompare(const void* a, const void* b);
+
+
