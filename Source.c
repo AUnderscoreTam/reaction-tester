@@ -13,7 +13,7 @@ enum choice
 	switch_profile_by_name,
 	rename_profile,
 	delete_profile,
-
+	exit_program,
 };
 
 int main() {
@@ -74,14 +74,14 @@ int main() {
 		printf("\n6) switch profile by name");
 		printf("\n7) rename profile");
 		printf("\n8) delete profile");
-		
+		printf("\n9) exit program")
 
 		printf("\n\n Option selected :  ");
 		do
 		{
 			scanf("%d", &choice);
 			getchar();
-		} while (choice <= 0 || choice > 8);
+		} while (choice <= 0 || choice > 9);
 
 
 		switch (choice)
@@ -119,8 +119,17 @@ int main() {
 			deleteProfile(pPfList, pP);
 			break;
 
+		case exit_program:
+			printf("are you sure you  want to quit?\ncofirm by typing y\n");
+			if(getchar()=='y' || 'Y'){
+			fclose(pP);
+			pP=NULL;
+			fclose(pPfList);
+			pPfList=NULL;
+			exit(EXIT_SUCCESS);
+			}
+		
 		default:
-
 			break;
 		}
 
