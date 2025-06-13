@@ -4,7 +4,6 @@ extern char txt[5] = { ".txt" };
 
 FILE* createProfile(FILE* const pFL,FILE* pP) {
 	PROFILE temp1 = { 0 };
-	char txt[5] = { ".txt" };
 	FILE* profilePointer = NULL;
 	int id = 0;
 	time_t now = time(NULL);
@@ -16,7 +15,9 @@ FILE* createProfile(FILE* const pFL,FILE* pP) {
 
 
 	printf("enter your alias\n");
-	scanf("%29[^\n]", temp1.name);
+	if (scanf("%29[^\n]", temp1.name) == 0) {
+		perror("Error at line 20:");
+	}
 
 	while ((getchar()) != '\n');
 	
@@ -77,7 +78,9 @@ FILE* switchProfile(const FILE* pP, const FILE* const pFL) {
 
 	do
 	{
-		scanf("%d", &choice);
+		if(scanf("%d", &choice) == 0) {
+			perror("Error at line 82:");
+	}
 		getchar();
 	} while (choice <= 0 || choice > n);
 
@@ -104,7 +107,7 @@ void listAllProfiles(const FILE* const pFL) {
 	}
 }
 
-int scanId(const FILE* const pFL) {
+int scanId(FILE* const pFL) {
 	int n = 0;
 	fseek(pFL, 0, SEEK_SET);
 	fread(&n, sizeof(int), 1, pFL);
@@ -122,7 +125,9 @@ void deleteProfile(FILE* const pFL, FILE* pP) {
 
 	do
 	{
-		scanf("%d", &choice);
+		if(scanf("%d", &choice) == 0) {
+			perror("Error at line 129:");
+	}
 		getchar();
 	} while (choice <= 0 || choice > n);
 
@@ -204,7 +209,9 @@ FILE* renameProfile(FILE* const pFL, FILE* pP) {
 
 	do
 	{
-		scanf("%d", &choice);
+		if(scanf("%d", &choice) == 0) {
+			perror("Error at line 213:");
+	};
 		getchar();
 	} while (choice <= 0 || choice > n);
 
@@ -219,7 +226,9 @@ FILE* renameProfile(FILE* const pFL, FILE* pP) {
 			printf("alias already taken\n");
 		}
 		printf("enter new alias\n");
-		scanf("%29[^\n]", name);
+		if(scanf("%29[^\n]", name) == 0) {
+			perror("Error at line 230:");
+		}
 		while ((getchar()) != '\n');
 		strcpy(namet2, name);
 		warning++;
@@ -254,9 +263,10 @@ FILE* renameProfile(FILE* const pFL, FILE* pP) {
 	fprintf(pP, "%s", name);
 	fclose(pP);
 
-	rename(namet, namet2);
-	printf("Value of errno: %d\n", errno);
-	perror("Error message:");
+	if(rename(namet, namet2) != 0) {
+		perror("Error at line 267:");
+	}
+
 
 	if ((pP=fopen(namet2,"r+"))==NULL)
 	{
@@ -301,13 +311,19 @@ void reactionTest(FILE* const pP) {
 	}
 	ftime(&time2);
 	rez = ((time2.time - time1.time)*1000 + time2.millitm) - time1.millitm;
+	if (rez<60)
+	{
+		rez = 0;
+	}
 	if (rez == 0)
 	{
 		printf("pressed too early\n");
+		Sleep(3000);
 	}
 	else if(rez >=9999)
 	{
 		printf("pressed too late\n");
+		Sleep(3000);
 	}
 	else {
 		printf("%d\n", rez);
@@ -376,7 +392,9 @@ int readspeed(FILE* const pP, int i) {
 	while (fgetc(pP) != '\n') {
 	}
 	fseek(pP, 30 * i, SEEK_CUR);
-	fscanf(pP, "%d", &rez);
+	if(fscanf(pP, "%d", &rez) == 0) {
+		perror("Error at line 390:");
+	}
 	return rez;
 }
 
@@ -392,7 +410,9 @@ FILE* searchProfile(const FILE* pP, const FILE* const pFL) {
 	char key[30] = { 0 };
 
 	printf("enter your alias\n");
-	scanf("%29[^\n]",key);
+	if(scanf("%29[^\n]",key) == 0) {
+		perror("Error at line 487:");
+	}
 
 	while ((getchar()) != '\n');
 

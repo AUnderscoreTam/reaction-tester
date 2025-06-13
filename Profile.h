@@ -20,7 +20,7 @@ typedef struct {
 FILE* createProfile(FILE* const pFL, FILE* pP);
 FILE* switchProfile(const FILE* pP, const FILE* const pFL);
 void listAllProfiles(const FILE* const pFL);
-int scanId(const FILE* const pFL);
+int scanId(FILE* const pFL);
 void deleteProfile(FILE* const pFL, FILE* pP);
 FILE* renameProfile(FILE* const pFL, FILE* pP);
 void writeToFile(FILE* const pP, char* string);
